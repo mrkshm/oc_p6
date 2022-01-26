@@ -1,4 +1,4 @@
 .env
 node_modules
-back/images/
+/back/images/
 .DS_Store
