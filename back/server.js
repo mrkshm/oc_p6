@@ -1,6 +1,7 @@
 const http = require("http");
 const app = require("./app");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
 
 const normalizePort = val => {
   const port = parseInt(val, 10);

@@ -5,16 +5,15 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const mongoSanitize = require("express-mongo-sanitize");
 require("dotenv").config();
-// const { body, validationResult } = require("express-validator");
 
 const path = require("path");
 
-const sauceRoutes = require("./routes/sauces");
-const userRoutes = require("./routes/user");
+const sauceRoutes = require("./api/routes/sauces");
+const userRoutes = require("./api/routes/user");
 
 mongoose
   .connect(
-    "mongodb+srv://mrks:qweasd@cluster0.tq8h8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@cluster0.tq8h8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
