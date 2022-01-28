@@ -1,7 +1,12 @@
 const express = require("express");
+const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const mongoSanitize = require("express-mongo-sanitize");
+require("dotenv").config();
+// const { body, validationResult } = require("express-validator");
+
 const path = require("path");
 
 const sauceRoutes = require("./routes/sauces");
@@ -16,6 +21,20 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
+app.use(
+  helmet({
+    // contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false
+  })
+);
+
+app.use(
+  mongoSanitize({
+    onSanitize: ({ req, key }) => {
+      console.warn(`This request[${key}] is sanitized`, req);
+    }
+  })
+);
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 

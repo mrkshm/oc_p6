@@ -37,7 +37,7 @@ exports.modifySauce = (req, res, next) => {
         // console.log(req.file);
         // fs.unlink(`images/${oldImage}`, () => {});
       })
-      .catch();
+      .catch(error => res.status(400).json({ error }));
   }
 
   const sauceObject = req.file
@@ -49,6 +49,7 @@ exports.modifySauce = (req, res, next) => {
         }`
       }
     : { ...req.body };
+
   let dongus = 3;
   Sauce.updateOne(
     { _id: req.params.id },
@@ -91,13 +92,16 @@ exports.likeSauce = (req, res, next) => {
   console.log(like, userId);
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
-      if (like == 1) {
+      if (like === 1) {
         if (sauce.usersLiked.includes(userId)) {
           console.log("Vous avez déjà aimé cette sauce !");
+          return res
+            .status(501)
+            .json({ message: "Vous avez déjà aimé cette sauce !" });
         } else {
           sauce.usersLiked.push(userId);
           sauce.likes += 1;
-          console.log(sauce.usersLiked, " and ", sauce.likes);
+          // console.log(sauce.usersLiked, " and ", sauce.likes);
           Sauce.updateOne(
             { _id: req.params.id },
             { likes: sauce.likes, usersLiked: sauce.usersLiked }
@@ -105,8 +109,8 @@ exports.likeSauce = (req, res, next) => {
             .then(() => res.status(200).json({ message: "All is ok" }))
             .catch(error => res.status(501).json({ error }));
         }
-      } else if (like == 0) {
-        console.log("Neither liked not disliked");
+      } else if (like === 0) {
+        // console.log("Neither liked not disliked");
         if (sauce.usersLiked.includes(userId)) {
           sauce.likes -= 1;
           sauce.usersLiked.splice(sauce.usersLiked.indexOf(userId), 1);
@@ -121,7 +125,7 @@ exports.likeSauce = (req, res, next) => {
           sauce.usersDisliked.splice(sauce.usersDisliked.indexOf(userId), 1);
           Sauce.updateOne(
             { _id: req.params.id },
-            { likes: sauce.dislikes, usersDisliked: sauce.usersLiked }
+            { dislikes: sauce.dislikes, usersDisliked: sauce.usersDisliked }
           )
             .then(() => res.status(200).json({ message: "All is ok" }))
             .catch(error => res.status(501).json({ error }));
