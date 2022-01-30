@@ -7,14 +7,18 @@ const userValidationRules = () => {
   ];
 };
 
-// const sauceValidationRules = () => {
-//   return [
-//     // Rules for sauce validation
-//     body("heat").isNumeric(),
-//     body("likes").isNumeric(),
-//     body("dislikes").isNumeric()
-//   ];
-// };
+const sauceValidationRules = () => {
+  return [
+    // Rules for sauce validation
+    // but how do I get to info
+    // that is in an Object ???
+    body("name").isAlpha(),
+    body("manufacturer").isNumeric(),
+    body("description").isNumeric(),
+    body("mainPepper").isNumeric(),
+    body("heat").isNumeric()
+  ];
+};
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -30,7 +34,7 @@ const validate = (req, res, next) => {
 };
 
 module.exports = {
-  // sauceValidationRules,
+  sauceValidationRules,
   userValidationRules,
   validate
 };
