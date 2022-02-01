@@ -37,41 +37,25 @@ const userValidator = async (req, res, next) => {
 };
 
 const sauceValidator = async (req, res, next) => {
-  let sauce;
+  let dirtySauce;
   if (req.body.sauce) {
-    const sauceObject = JSON.parse(req.body.sauce);
-    console.log(sauceObject);
-    sauce = {
-      userId: sauceObject.userId,
-      name: sauceObject.name,
-      manufacturer: sauceObject.manufacturer,
-      description: sauceObject.description,
-      mainPepper: sauceObject.mainPepper,
-      heat: sauceObject.heat
-    };
+    dirtySauce = JSON.parse(req.body.sauce);
   } else {
-    sauce = {
-      userId: req.body.userId,
-      name: req.body.name,
-      manufacturer: req.body.manufacturer,
-      description: req.body.description,
-      mainPepper: req.body.mainPepper,
-      heat: req.body.heat
-    };
+    dirtySauce = { ...req.body };
   }
   try {
-    const value = await sauceSchema.validateAsync({
-      userId: sauce.userId,
-      name: sauce.name,
-      manufacturer: sauce.manufacturer,
-      description: sauce.description,
-      mainPepper: sauce.mainPepper,
-      heat: sauce.heat
+    const cleanSauce = await sauceSchema.validateAsync({
+      userId: dirtySauce.userId,
+      name: dirtySauce.name,
+      manufacturer: dirtySauce.manufacturer,
+      description: dirtySauce.description,
+      mainPepper: dirtySauce.mainPepper,
+      heat: dirtySauce.heat
     });
-    req.body.cleanSauce = value;
+    req.body.cleanSauce = cleanSauce;
   } catch (err) {
     return res.status(400).json({
-      message: "Please check your input"
+      message: err.message
     });
   }
 
