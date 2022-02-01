@@ -22,7 +22,6 @@ mongoose
 const app = express();
 app.use(
   helmet({
-    // contentSecurityPolicy: false,
     crossOriginResourcePolicy: false
   })
 );

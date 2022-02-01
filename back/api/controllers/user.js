@@ -2,12 +2,29 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+//
+// POST api/auth/signup
+//
 exports.signup = (req, res, next) => {
-  const email = req.body.email;
+  //
+  // req.body.cleanUser from ../middleware/validator.js:
+  // email, password
+  //
+  const email = req.body.cleanUser.email;
+  //
+  // Checking if user has already an account
+  //
+  if (User.findOne({ email: email })) {
+    return res
+      .status(400)
+      .json({ message: "Un compte avec cette adresse email existe déjà." });
+  }
+  //
+  // If not, continue: encrypt password and save user
+  //
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.cleanUser.password, 10)
     .then(hash => {
-      // code
       const user = new User({
         email: email,
         password: hash
@@ -20,6 +37,9 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+//
+// POST api/auth/login
+//
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {

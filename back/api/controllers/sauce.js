@@ -1,17 +1,16 @@
 const Sauce = require("../models/Sauce");
 const fs = require("fs");
 
+//
+// POST api/sauces/
+//
 exports.createSauce = (req, res, next) => {
-  const sauceObject = JSON.parse(req.body.sauce);
-  delete sauceObject._id;
   const sauce = new Sauce({
-    // name: sauceObject.name,
-    // manufacturer: sauceObject.manufacturer,
-    // description: sauceObject.description,
-    // mainPepper: sauceObject.mainPepper,
-    // description: sauceObject.description,
-    // heat: sauceObject.heat,
-    ...sauceObject,
+    //
+    // req.body.cleanSauce from ../middleware/validator.js:
+    // userId, name, manufacturer, description, mainPepper, heat
+    //
+    ...req.body.cleanSauce,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
@@ -28,34 +27,45 @@ exports.createSauce = (req, res, next) => {
     });
 };
 
+//
+// PUT /api/sauces/:id
+//
 exports.modifySauce = (req, res, next) => {
+  //
+  // Get name of the old image if there is a file in req
   let oldImage;
   if (req.file) {
     Sauce.findOne({ _id: req.params.id })
       .then(oldSauce => {
         oldImage = oldSauce.imageUrl.split("/images/")[1];
-        // console.log(req.file);
-        // fs.unlink(`images/${oldImage}`, () => {});
       })
       .catch(error => res.status(400).json({ error }));
   }
 
+  // Create the Sauce object to be saved...
   const sauceObject = req.file
     ? {
-        // put new image
-        ...JSON.parse(req.body.sauce),
+        // If there is an image file,
+        // populate the sauceObject...
+        ...req.body.cleanSauce,
+        //
+        // ... and put in new imageUrl
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`
       }
-    : { ...req.body };
+    : // If there is no image file, just populate the sauceObject
+      { ...req.body.cleanSauce };
 
-  let dongus = 3;
+  //
+  // Save the updated sauce
+  //
   Sauce.updateOne(
     { _id: req.params.id },
     { ...sauceObject, _id: req.params.id }
   )
     .then(() => {
+      // If everything went well, delete the old image file
       fs.unlink(`images/${oldImage}`, () => {});
       return res
         .status(200)
@@ -64,6 +74,9 @@ exports.modifySauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+//
+// DELETE /api/sauces/:id
+//
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
@@ -86,6 +99,9 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+//
+// POST /api/sauces/:id/like
+//
 exports.likeSauce = (req, res, next) => {
   const userId = req.body.userId;
   const like = req.body.like;
@@ -163,11 +179,18 @@ exports.likeSauce = (req, res, next) => {
   // });
 };
 
+//
+// GET /api/sauces/:id
+//
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(404).json({ error }));
 };
+
+//
+// GET /api/sauces
+//
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
     .then(sauces => res.status(200).json(sauces))
