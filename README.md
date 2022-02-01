@@ -1,4 +1,4 @@
-# oc_p6
+# OpenClassrooms Projet 6
 ## Installation
 
 1. Clone this repository and cd into it
@@ -45,7 +45,6 @@ nodemon server
 
 2. Start frontend
 ```
-cd ..
 cd Web-Developer-P6
 npm start
 ```
