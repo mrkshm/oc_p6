@@ -20,20 +20,16 @@ cd Web-Developer-P6
 npm install
 ```
 
-4. create a .env file for the backend
-```
-cd ..
-cd back
-touch .env
-```
+4. Create a MongoDB Database on Atlas
 
-5. Paste the following into the .env file:
-```
-PORT=3000
-DB_USER=mrks
-DB_PWD=qweasd
-TOKEN_SECRET=13fE43Fd96gXd
-```
+5. rename the .env2 file in the back directory to .env and add the neccessary information:
+DB_USER=Username-for-your-MongoDB-Database
+DB_PWD=Password-for-your-MongoDB-Database
+TOKEN_SECRET=Your-Secret-string
+DB_CLUSTER_=Cluster-of-your-MongoDB-Database
+DB_BASE=Name-of-your-MongoDB-Database
+
+
 
 ## Usage
 

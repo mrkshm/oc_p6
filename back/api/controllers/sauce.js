@@ -21,7 +21,9 @@ exports.createSauce = (req, res, next) => {
   });
   sauce
     .save()
-    .then(() => res.status(201).json({ message: "Sauce enregistrée !" }))
+    .then(() =>
+      res.status(201).json({ message: "Your sauce has been created" })
+    )
     .catch(error => {
       res.status(400).json({ error });
     });
@@ -67,11 +69,11 @@ exports.modifySauce = (req, res, next) => {
     .then(() => {
       // If everything went well, delete the old image file
       fs.unlink(`images/${oldImage}`, () => {});
-      return res
-        .status(200)
-        .json({ message: "La sauce était bien modifiée !" });
+      return res.status(200).json({ message: "Your sauce has been modified" });
     })
-    .catch(error => res.status(400).json({ error }));
+    .catch(error =>
+      res.status(400).json({ message: "There has been a problem." })
+    );
 };
 
 //
@@ -80,15 +82,12 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
-      if (sauce.userId !== req.auth.userId) {
-        res.status(400).json({ error });
-      }
       const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => {
             res.status(200).json({
-              message: "Votre sauce a été supprimée !"
+              message: "Your sauce has been deleted"
             });
           })
           .catch(error => {
@@ -110,10 +109,10 @@ exports.likeSauce = (req, res, next) => {
     .then(sauce => {
       if (like === 1) {
         if (sauce.usersLiked.includes(userId)) {
-          console.log("Vous avez déjà aimé cette sauce !");
+          console.log("You have already liked this sauce");
           return res
             .status(501)
-            .json({ message: "Vous avez déjà aimé cette sauce !" });
+            .json({ message: "You have already disliked this sauce" });
         } else {
           sauce.usersLiked.push(userId);
           sauce.likes += 1;
@@ -149,7 +148,7 @@ exports.likeSauce = (req, res, next) => {
         // return res.status(200).json({ message: "All is ok" });
       } else if (like == -1) {
         if (sauce.usersLiked.includes(userId)) {
-          console.log("Vous n'avez déjà pas aimé la sauce !");
+          console.log("You have already disliked this sauce");
         } else {
           sauce.usersDisliked.push(userId);
           sauce.dislikes += 1;

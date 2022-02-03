@@ -1,5 +1,11 @@
+const res = require("express/lib/response");
+const req = require("express/lib/request");
+
 const multer = require("multer");
 const path = require("path");
+const { nextTick } = require("process");
+const { MulterError } = require("multer");
+const { Promise } = require("mongoose");
 
 const MIME_TYPES = {
   "image/jpg": "jpg",
@@ -18,4 +24,7 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({ storage }).single("image");
+module.exports = multer({
+  storage,
+  limits: { fileSize: 1024 * 1024 * 5 }
+}).single("image");

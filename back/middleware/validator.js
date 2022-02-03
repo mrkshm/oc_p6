@@ -22,13 +22,12 @@ const sauceSchema = Joi.object({
 //
 const userValidator = async (req, res, next) => {
   try {
-    const value = await userSchema.validateAsync({
+    const cleanUser = await userSchema.validateAsync({
       email: req.body.email,
       password: req.body.password
     });
-    req.body.cleanUser = value;
+    req.body.cleanUser = cleanUser;
   } catch (err) {
-    console.log(err.message);
     return res.status(400).json({
       message: err.message
     });
@@ -40,6 +39,7 @@ const sauceValidator = async (req, res, next) => {
   let dirtySauce;
   if (req.body.sauce) {
     dirtySauce = JSON.parse(req.body.sauce);
+    console.log(dirtySauce);
   } else {
     dirtySauce = { ...req.body };
   }

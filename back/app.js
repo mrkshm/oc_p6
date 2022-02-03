@@ -1,8 +1,8 @@
 const express = require("express");
-const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 require("dotenv").config();
 
@@ -13,7 +13,7 @@ const userRoutes = require("./api/routes/user");
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@cluster0.tq8h8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@${process.env.DB_CLUSTER}.mongodb.net/${process.env.DB_BASE}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -52,6 +52,7 @@ app.use((req, res, next) => {
 //
 // Routes to handle the incoming Requests
 //
+
 app.use("/api/sauces", sauceRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
