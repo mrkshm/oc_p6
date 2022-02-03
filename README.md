@@ -23,11 +23,13 @@ npm install
 4. Create a MongoDB Database on Atlas
 
 5. rename the .env2 file in the back directory to .env and add the neccessary information:
+```
 DB_USER=Username-for-your-MongoDB-Database
 DB_PWD=Password-for-your-MongoDB-Database
 TOKEN_SECRET=Your-Secret-string
 DB_CLUSTER_=Cluster-of-your-MongoDB-Database
 DB_BASE=Name-of-your-MongoDB-Database
+```
 
 
 
