@@ -5,13 +5,22 @@ const auth = require("../../middleware/auth");
 const multer = require("../../middleware/multer-config");
 const { sauceValidator } = require("../../middleware/validator.js");
 const ownsSauce = require("../../middleware/permissions");
+const errorCatcher = require("../../middleware/errorCatcher");
 
-router.post("/", auth, multer, sauceValidator, sauceCtrl.createSauce);
+router.post(
+  "/",
+  auth,
+  multer,
+  errorCatcher,
+  sauceValidator,
+  sauceCtrl.createSauce
+);
 router.put(
   "/:id",
   auth,
   ownsSauce,
   multer,
+  errorCatcher,
   sauceValidator,
   sauceCtrl.modifySauce
 );

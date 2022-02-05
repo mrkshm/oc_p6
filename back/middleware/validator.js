@@ -5,14 +5,14 @@ const Joi = require("joi");
 //
 const userSchema = Joi.object({
   email: Joi.string().email().trim().required(),
-  password: Joi.string().min(5).required()
+  password: Joi.string().min(6).required()
 });
 
 const sauceSchema = Joi.object({
   userId: Joi.string().alphanum().length(24),
   name: Joi.string().min(3).max(30).trim().required(),
   manufacturer: Joi.string().min(3).max(50).trim().required(),
-  description: Joi.string().min(3).max(150).trim().required(),
+  description: Joi.string().min(3).max(250).trim().required(),
   mainPepper: Joi.string().min(3).max(15).trim().required(),
   heat: Joi.number().integer().min(1).max(10).required()
 });

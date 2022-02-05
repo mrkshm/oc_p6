@@ -4,12 +4,14 @@ const ownsSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
       if (sauce.userId !== req.auth.userId) {
-        res.status(400).json({ message: "You are not allowed to do that" });
+        return res
+          .status(401)
+          .json({ message: "You are not allowed to do that" });
       }
       next();
     })
     .catch(error => {
-      res.status(500).json({ message: "Sauce not found" });
+      res.status(400).json({ message: "Sauce not found" });
     });
 };
 
