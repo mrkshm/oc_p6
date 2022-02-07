@@ -34,7 +34,7 @@ exports.createSauce = (req, res, next) => {
 //
 exports.modifySauce = (req, res, next) => {
   //
-  // Get name of the old image if there is a file in req
+  // If there is a file in req, get name of the old image
   let oldImage;
   if (req.file) {
     Sauce.findOne({ _id: req.params.id })

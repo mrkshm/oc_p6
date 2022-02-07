@@ -39,7 +39,6 @@ const sauceValidator = async (req, res, next) => {
   let dirtySauce;
   if (req.body.sauce) {
     dirtySauce = JSON.parse(req.body.sauce);
-    console.log(dirtySauce);
   } else {
     dirtySauce = { ...req.body };
   }
