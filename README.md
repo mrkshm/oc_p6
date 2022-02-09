@@ -41,14 +41,14 @@ DB_BASE=Name-of-your-MongoDB-Database
 
 ## Usage
 
-1. Start backend  
+1. Start the backend  
 _1. Lancez le backend_
 ```
 cd back
 nodemon server
 ```
 
-2. Start frontend  
+2. Start the frontend  
 _2. Lancez le frontend_
 ```
 cd Web-Developer-P6
