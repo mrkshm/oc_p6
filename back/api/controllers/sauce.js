@@ -109,10 +109,9 @@ exports.likeSauce = (req, res, next) => {
     .then(sauce => {
       if (like === 1) {
         if (sauce.usersLiked.includes(userId)) {
-          console.log("You have already liked this sauce");
           return res
             .status(501)
-            .json({ message: "You have already disliked this sauce" });
+            .json({ message: "You have already liked this sauce" });
         } else {
           sauce.usersLiked.push(userId);
           sauce.likes += 1;
@@ -144,10 +143,12 @@ exports.likeSauce = (req, res, next) => {
           )
             .then(() => res.status(200).json({ message: "All is ok" }))
             .catch(error => res.status(501).json({ error }));
+        } else {
+          return res.status(400).json({ message: "Invalid likes or dislikes" });
         }
         // return res.status(200).json({ message: "All is ok" });
       } else if (like == -1) {
-        if (sauce.usersLiked.includes(userId)) {
+        if (sauce.usersDisliked.includes(userId)) {
           console.log("You have already disliked this sauce");
         } else {
           sauce.usersDisliked.push(userId);
@@ -161,21 +162,7 @@ exports.likeSauce = (req, res, next) => {
         }
       }
     })
-    .catch();
-  // Get sauce with req.params.id
-  // if user likes (1) {
-  // if user already in liked, do nothing
-  // else add to liked, likes + 1
-  // }
-  // if user dislikes (-1) {
-  // if user already in disliked, do nothing
-  // else add to disliked, dislikes + 1
-  // if user 0 : if user in disliked, remove from disliked, dislikes -1
-  // else if user in liked, remove from liked, likes -1
-  // }
-  // return res.status(200).json({
-  // message: "You like this sauce !"
-  // });
+    .catch(error => res.status(404).json({ error }));
 };
 
 //
